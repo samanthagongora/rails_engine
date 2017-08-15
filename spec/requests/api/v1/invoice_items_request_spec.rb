@@ -36,11 +36,11 @@ describe "Invoice Items API" do
     expect(invoice_item['id']).to eq(dummy.id)
   end
 
-  xit "can get one invoice_item by another attribute" do
-    merchant = create(:merchant)
-    id = create(:invoice_item, merchant: merchant).id
+  it "can get one invoice_item by another attribute" do
+    invoice = create(:invoice)
+    id = create(:invoice_item, invoice: invoice).id
 
-    get "/api/v1/invoice_items/find?merchant_id=#{merchant.id}"
+    get "/api/v1/invoice_items/find?invoice_id=#{invoice.id}"
 
     invoice_item = JSON.parse(response.body)
 
