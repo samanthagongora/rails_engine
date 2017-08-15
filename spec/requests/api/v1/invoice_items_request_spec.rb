@@ -69,4 +69,19 @@ describe "Invoice Items API" do
     expect(response).to be_success
     expect(invoice_items.count).to eq(4)
   end
+
+  it "can return one random record" do
+    invoice_item1 = create(:invoice_item)
+    invoice_item2 = create(:invoice_item)
+    invoice_item3 = create(:invoice_item)
+
+    invoice_items = [invoice_item1.id, invoice_item2.id, invoice_item3.id]
+
+    get "/api/v1/invoice_items/random"
+
+    invoice_item = JSON.parse(response.body)
+
+    expect(response).to be_success
+    expect(invoice_items).to include(invoice_item['id'])
+  end
 end
