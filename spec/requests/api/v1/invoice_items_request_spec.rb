@@ -48,11 +48,10 @@ describe "Invoice Items API" do
     expect(invoice_item['id']).to eq(id)
   end
 
-  xit "can get all invoice_items by attribute" do
-    merchant = create(:merchant)
-    create_list(:invoice_item, 4, merchant: merchant)
+  it "can get all invoice_items by attribute" do
+    create_list(:invoice_item, 4, quantity: 100)
 
-    get "/api/v1/invoice_items/find_all?merchant_id=#{merchant.id}"
+    get "/api/v1/invoice_items/find_all?quantity=100"
 
     invoice_items = JSON.parse(response.body)
 
