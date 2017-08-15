@@ -1,4 +1,5 @@
 require 'rails_helper'
+require 'date'
 
 describe "Invoices API" do
   it "sends a list of invoices" do
@@ -24,9 +25,15 @@ describe "Invoices API" do
     expect(invoice['id']).to eq(id)
   end
 
-  xit "can create a new invoice" do
-    invoice_params = { name: "saw",
-                    description: "I want to play a game" }
+  it "can create a new invoice" do
+    customer = create(:customer)
+    merchant = create(:merchant)
+
+    invoice_params = {status: 'shipped',
+    customer_id: customer.id,
+    merchant_id: merchant.id,
+    created_at: DateTime.now,
+    updated_at: DateTime.now}
 
     post "/api/v1/invoices", params:{ invoice: invoice_params }
     invoice = Invoice.last
@@ -34,7 +41,7 @@ describe "Invoices API" do
     assert_response :success
     expect(response).to be_success
 
-    expect(invoice.name).to eq(invoice_params[:name])
+    expect(invoice.customer_id).to eq(customer.id)
   end
 
   xit "can update an existing invoice" do
