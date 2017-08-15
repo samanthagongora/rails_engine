@@ -59,10 +59,10 @@ describe "Items API" do
     expect(items.count).to eq(4)
   end
 
-  xit "can get all items by another attribute" do
-    create_list(:item, 4, status: 'shipped')
+  it "can get all items by another attribute" do
+    create_list(:item, 4, unit_price:0.3421)
 
-    get "/api/v1/items/find_all?status=shipped"
+    get "/api/v1/items/find_all?unit_price=0.3421"
 
     items = JSON.parse(response.body)
 
