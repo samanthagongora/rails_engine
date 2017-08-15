@@ -1,9 +1,16 @@
 require 'csv'
 
-desc "Import all CSVs"
+
+namespace :import do
+  desc "Import all CSVs"
+  task all_csv: ['import:merchants', 'import:items', 'import:customers',
+                 'import:invoices', 'import:transactions',
+                 'import:invoice_items']
+
+
   desc "Import merchants from csv file"
 
-  task :import => [:environment] do
+  task :merchants => [:environment] do
 
     file = "db/csv/merchants.csv"
     index  = 0
@@ -20,7 +27,7 @@ desc "Import all CSVs"
   end
 
   desc "Import items from csv file"
-  task :import => [:environment] do
+  task :items => [:environment] do
 
     file = "db/csv/items.csv"
     index  = 0
@@ -41,7 +48,7 @@ desc "Import all CSVs"
   end
 
   desc "Import customers from csv file"
-  task :import => [:environment] do
+  task :customers => [:environment] do
 
       file = "db/csv/customers.csv"
       index  = 0
@@ -61,7 +68,7 @@ desc "Import all CSVs"
 
   desc "Import invoices from csv file"
   index  = 0
-  task :import => [:environment] do
+  task :invoices => [:environment] do
 
     file = "db/csv/invoices.csv"
     index  = 0
@@ -80,7 +87,7 @@ desc "Import all CSVs"
   end
 
   desc "Import transactions from csv file"
-  task :import => [:environment] do
+  task :transactions => [:environment] do
 
     file = "db/csv/transactions.csv"
     index  = 0
@@ -99,7 +106,7 @@ desc "Import all CSVs"
   end
 
   desc "Import invoice items from csv file"
-  task :import => [:environment] do
+  task :invoice_items => [:environment] do
 
     file = "db/csv/invoice_items.csv"
     index  = 0
@@ -118,3 +125,4 @@ desc "Import all CSVs"
     end
     puts "DB seeded!"
   end
+end
