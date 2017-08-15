@@ -1,5 +1,4 @@
 require 'rails_helper'
-require 'date'
 
 describe "Invoices API" do
   it "sends a list of invoices" do

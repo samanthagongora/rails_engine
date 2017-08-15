@@ -1,5 +1,4 @@
 require 'rails_helper'
-require 'date'
 
 describe "Items API" do
   it "sends a list of items" do
