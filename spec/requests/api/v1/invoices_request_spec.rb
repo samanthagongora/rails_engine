@@ -36,11 +36,34 @@ describe "Invoices API" do
     expect(invoice['id']).to eq(id)
   end
 
+  it "can get one invoice by another attribute" do
+    merchant = create(:merchant)
+    id = create(:invoice, merchant: merchant).id
+
+    get "/api/v1/invoices/find?merchant_id=#{merchant.id}"
+
+    invoice = JSON.parse(response.body)
+
+    expect(response).to be_success
+    expect(invoice['id']).to eq(id)
+  end
+
   it "can get all invoices by attribute" do
     customer = create(:customer)
     create_list(:invoice, 4, customer: customer)
 
     get "/api/v1/invoices/find_all?customer_id=#{customer.id}"
+
+    invoices = JSON.parse(response.body)
+
+    expect(response).to be_success
+    expect(invoices.count).to eq(4)
+  end
+
+  it "can get all invoices by another attribute" do
+    create_list(:invoice, 4, status: 'shipped')
+
+    get "/api/v1/invoices/find_all?status=shipped"
 
     invoices = JSON.parse(response.body)
 
