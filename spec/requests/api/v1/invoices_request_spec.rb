@@ -23,4 +23,16 @@ describe "Invoices API" do
     expect(response).to be_success
     expect(invoice['id']).to eq(id)
   end
+
+  it "can get one invoice by attribute" do
+    customer = create(:customer)
+    id = create(:invoice, customer: customer).id
+
+    get "/api/v1/invoices/find?customer_id=#{customer.id}"
+
+    invoice = JSON.parse(response.body)
+
+    expect(response).to be_success
+    expect(invoice['id']).to eq(id)
+  end
 end
