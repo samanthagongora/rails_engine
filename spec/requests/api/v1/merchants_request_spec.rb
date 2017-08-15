@@ -45,4 +45,17 @@ describe "Merchants API" do
     expect(response).to be_success
     expect(merchants.count).to eq(3)
   end
+
+  it "can return a random merchant" do
+    m1 = create(:merchant, name: "Tests")
+    m2 = create(:merchant, name: "for")
+    m3 = create(:merchant, name: "Dayz")
+
+    get "/api/v1/merchants/random"
+
+    merchant = JSON.parse(response.body, symbolize_names: true)
+    expect(response).to be_success
+    expect(merchant.count).to eq(1)
+    expect([m1.name, m2.name, m3.name]).to include(merchant.first[:name])
+  end
 end
