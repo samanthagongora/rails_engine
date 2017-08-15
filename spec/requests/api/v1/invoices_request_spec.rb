@@ -24,4 +24,15 @@ describe "Invoices API" do
     expect(response).to be_success
     expect(invoice['id']).to eq(id)
   end
+
+  it "can get one invoice by one attribute" do
+    invoice = create(:invoice)
+
+    get "/api/v1/invoices/find?status=shipped"
+
+    invoice = JSON.parse(response.body)
+
+    expect(response).to be_success
+    expect(invoice['id']).to eq(id)
+  end
 end
