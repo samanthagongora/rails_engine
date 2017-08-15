@@ -59,7 +59,7 @@ describe "Invoice Items API" do
     expect(invoice_items.count).to eq(4)
   end
 
-  xit "can get all invoice_items by another attribute" do
+  it "can get all invoice_items by another attribute" do
     create_list(:invoice_item, 4, unit_price:0.3421)
 
     get "/api/v1/invoice_items/find_all?unit_price=0.3421"
