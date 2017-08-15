@@ -3,6 +3,10 @@ class Api::V1::Invoices::FindController < ApplicationController
     render json: Invoice.find_by(invoice_params)
   end
 
+  def index
+    render json: Invoice.find_all(invoice_params)
+  end
+
   private
 
   def invoice_params
