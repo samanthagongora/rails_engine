@@ -9,9 +9,9 @@ desc "Import all CSVs"
     index  = 0
     CSV.foreach(file, :headers => true, header_converters: :symbol) do |row|
       Merchant.create!({
-        :name         => row[1],
-        :created_at   => row[2],
-        :updated_at   => row[3]
+        :name         => row["name"],
+        :created_at   => row["created_at"],
+        :updated_at   => row["updated_at"]
       })
       amount = 99
       puts "#{amount - index}" + " " +  "Merchants Remaining!"
@@ -26,12 +26,12 @@ desc "Import all CSVs"
     index  = 0
     CSV.foreach(file, :headers => true, header_converters: :symbol) do |row|
       Item.create!({
-        :name        => row[1],
-        :description => row[2],
-        :unit_price  => row[3],
-        :merchant_id => row[4],
-        :created_at  => row[5],
-        :updated_at  => row[6]
+        :name         => row["name"],
+        :description  => row["description"],
+        :unit_price   => row["unit_price"],
+        :merchant_id  => row["merchant_id"],
+        :created_at   => row["created_at"],
+        :updated_at   => row["updated_at"]
       })
       amount = 2483
       puts "#{amount - index}" + " " +  "Items Remaining!"
@@ -47,10 +47,10 @@ desc "Import all CSVs"
       index  = 0
       CSV.foreach(file, :headers => true, header_converters: :symbol) do |row|
         Customer.create!({
-          :first_name => row[1],
-          :last_name  =>  row[2],
-          :created_at => row[3],
-          :updated_at => row[4]
+          :first_name   => row["first_name"],
+          :last_name    =>  row["last_name"],
+          :created_at   => row["created_at"],
+          :updated_at   => row["updated_at"]
         })
 
       amount = 999
@@ -67,11 +67,11 @@ desc "Import all CSVs"
     index  = 0
     CSV.foreach(file, :headers => true, header_converters: :symbol) do |row|
       Invoice.create!({
-        :customer_id  => row[1],
-        :merchant_id  => row[2],
-        :status       => row[3],
-        :created_at   => row[4],
-        :updated_at   => row[5]
+        :customer_id  => row["customer_id"],
+        :merchant_id  => row["merchant_id"],
+        :status       => row["status"],
+        :created_at   => row["created_at"],
+        :updated_at   => row["updated_at"]
       })
       amount = 4843
       puts "#{amount - index}" + " " +  "Invoices Remaining!"
@@ -86,11 +86,11 @@ desc "Import all CSVs"
     index  = 0
     CSV.foreach(file, :headers => true, header_converters: :symbol) do |row|
       Transaction.create!({
-        :invoice_id         => row[1],
-        :credit_card_number => row[2],
-        :result             => row[4],
-        :created_at         => row[5],
-        :updated_at         => row[6]
+        :invoice_id         => row["invoice_id"],
+        :credit_card_number => row["credit_card_number"],
+        :result             => row["result"],
+        :created_at         => row["created_at"],
+        :updated_at         => row["updated_at"]
       })
       amount = 5594
       puts "#{amount - index}" + " " +  "Transactions Remaining!"
@@ -105,12 +105,12 @@ desc "Import all CSVs"
     index  = 0
     CSV.foreach(file, :headers => true, header_converters: :symbol) do |row|
       InvoiceItem.create!({
-        :item_id    => row[1],
-        :invoice_id => row[2],
-        :quantity   => row[3],
-        :unit_price => row[4],
-        :created_at => row[5],
-        :updated_at => row[6]
+        :item_id    => row["item_id"],
+        :invoice_id => row["invoice_id"],
+        :quantity   => row["quantity"],
+        :unit_price => row["unit_price"],
+        :created_at => row["created_at"],
+        :updated_at => row["updated_at"]
       })
       amount = 21687
       puts "#{amount - index}" + " " +  "Invoice Items Remaining!"
