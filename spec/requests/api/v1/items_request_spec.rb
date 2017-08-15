@@ -35,7 +35,7 @@ describe "Items API" do
     expect(item['id']).to eq(dummy.id)
   end
 
-  xit "can get one item by another attribute" do
+  it "can get one item by another attribute" do
     merchant = create(:merchant)
     id = create(:item, merchant: merchant).id
 
@@ -47,11 +47,11 @@ describe "Items API" do
     expect(item['id']).to eq(id)
   end
 
-  xit "can get all items by attribute" do
-    customer = create(:customer)
-    create_list(:item, 4, customer: customer)
+  it "can get all items by attribute" do
+    merchant = create(:merchant)
+    create_list(:item, 4, merchant: merchant)
 
-    get "/api/v1/items/find_all?customer_id=#{customer.id}"
+    get "/api/v1/items/find_all?merchant_id=#{merchant.id}"
 
     items = JSON.parse(response.body)
 
