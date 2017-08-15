@@ -58,4 +58,21 @@ describe "Merchants API" do
     expect(merchant.count).to eq(1)
     expect([m1.name, m2.name, m3.name]).to include(merchant.first[:name])
   end
+
+  it "can return all customers with pending invoices" do
+    customers = create_list(:customer, 4)
+    merchant = create_list(:merchant, 2)
+    invoice1 = create(:invoice, merchant: merchant[1], customer: customers[0], status: "pending")
+    invoice2 = create(:invoice, merchant: merchant[0], customer: customers[1], status: "shipped")
+    invoice3 = create(:invoice, merchant: merchant[1], customer: customers[2], status: "shipped")
+    invoice4 = create(:invoice, merchant: merchant[0], customer: customers[3], status: "pending")
+
+    get "/api/v1/merchants/:id/customers_with_pending_invoices"
+    returned_customers = JSON.parse(response.body)
+
+    expect(response).to be_success
+    expect(merchant.count).to eq(1)
+    binding.pry
+    expect(returned_customers.name).to include(merchant.first[:name])
+  end
 end
