@@ -32,7 +32,7 @@ describe "Items API" do
     item = JSON.parse(response.body)
 
     expect(response).to be_success
-    expect(item['id']).to eq(id)
+    expect(item['id']).to eq(dummy.id)
   end
 
   xit "can get one item by another attribute" do
