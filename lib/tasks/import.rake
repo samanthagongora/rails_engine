@@ -9,9 +9,9 @@ desc "Import all CSVs"
     index  = 0
     CSV.foreach(file, :headers => true, header_converters: :symbol) do |row|
       Merchant.create!({
-        :name         => row["name"],
-        :created_at   => row["created_at"],
-        :updated_at   => row["updated_at"]
+        :name         => row[:name],
+        :created_at   => row[:created_at],
+        :updated_at   => row[:updated_at]
       })
       amount = 99
       puts "#{amount - index}" + " " +  "Merchants Remaining!"
@@ -26,12 +26,12 @@ desc "Import all CSVs"
     index  = 0
     CSV.foreach(file, :headers => true, header_converters: :symbol) do |row|
       Item.create!({
-        :name         => row["name"],
-        :description  => row["description"],
-        :unit_price   => row["unit_price"],
-        :merchant_id  => row["merchant_id"],
-        :created_at   => row["created_at"],
-        :updated_at   => row["updated_at"]
+        :name         => row[:name],
+        :description  => row[:description],
+        :unit_price   => row[:unit_price],
+        :merchant_id  => row[:merchant_id],
+        :created_at   => row[:created_at],
+        :updated_at   => row[:updated_at]
       })
       amount = 2483
       puts "#{amount - index}" + " " +  "Items Remaining!"
@@ -47,10 +47,10 @@ desc "Import all CSVs"
       index  = 0
       CSV.foreach(file, :headers => true, header_converters: :symbol) do |row|
         Customer.create!({
-          :first_name   => row["first_name"],
-          :last_name    =>  row["last_name"],
-          :created_at   => row["created_at"],
-          :updated_at   => row["updated_at"]
+          :first_name   => row[:first_name],
+          :last_name    =>  row[:last_name],
+          :created_at   => row[:created_at],
+          :updated_at   => row[:updated_at]
         })
 
       amount = 999
@@ -67,11 +67,11 @@ desc "Import all CSVs"
     index  = 0
     CSV.foreach(file, :headers => true, header_converters: :symbol) do |row|
       Invoice.create!({
-        :customer_id  => row["customer_id"],
-        :merchant_id  => row["merchant_id"],
-        :status       => row["status"],
-        :created_at   => row["created_at"],
-        :updated_at   => row["updated_at"]
+        :customer_id  => row[:customer_id],
+        :merchant_id  => row[:merchant_id],
+        :status       => row[:status],
+        :created_at   => row[:created_at],
+        :updated_at   => row[:updated_at]
       })
       amount = 4843
       puts "#{amount - index}" + " " +  "Invoices Remaining!"
@@ -86,11 +86,11 @@ desc "Import all CSVs"
     index  = 0
     CSV.foreach(file, :headers => true, header_converters: :symbol) do |row|
       Transaction.create!({
-        :invoice_id         => row["invoice_id"],
-        :credit_card_number => row["credit_card_number"],
-        :result             => row["result"],
-        :created_at         => row["created_at"],
-        :updated_at         => row["updated_at"]
+        :invoice_id         => row[:invoice_id],
+        :credit_card_number => row[:credit_card_number],
+        :result             => row[:result],
+        :created_at         => row[:created_at],
+        :updated_at         => row[:updated_at]
       })
       amount = 5594
       puts "#{amount - index}" + " " +  "Transactions Remaining!"
@@ -105,15 +105,16 @@ desc "Import all CSVs"
     index  = 0
     CSV.foreach(file, :headers => true, header_converters: :symbol) do |row|
       InvoiceItem.create!({
-        :item_id    => row["item_id"],
-        :invoice_id => row["invoice_id"],
-        :quantity   => row["quantity"],
-        :unit_price => row["unit_price"],
-        :created_at => row["created_at"],
-        :updated_at => row["updated_at"]
+        :item_id    => row[:item_id],
+        :invoice_id => row[:invoice_id],
+        :quantity   => row[:quantity],
+        :unit_price => row[:unit_price],
+        :created_at => row[:created_at],
+        :updated_at => row[:updated_at]
       })
       amount = 21687
       puts "#{amount - index}" + " " +  "Invoice Items Remaining!"
       index +=1
     end
+    puts "DB seeded!"
   end
