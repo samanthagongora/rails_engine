@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :invoice do
-    status 1
+    status 0
     customer
     merchant
   end
