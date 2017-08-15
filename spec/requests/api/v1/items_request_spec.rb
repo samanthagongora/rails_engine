@@ -69,4 +69,19 @@ describe "Items API" do
     expect(response).to be_success
     expect(items.count).to eq(4)
   end
+
+  it "can return one random record" do
+    item1 = create(:item)
+    item2 = create(:item)
+    item3 = create(:item)
+
+    items = [item1.id, item2.id, item3.id]
+
+    get "/api/v1/items/random"
+
+    item = JSON.parse(response.body)
+
+    expect(response).to be_success
+    expect(items).to include(item['id'])
+  end
 end
