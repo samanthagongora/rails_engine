@@ -44,20 +44,21 @@ describe "Invoices API" do
     expect(invoice.customer_id).to eq(customer.id)
   end
 
-  xit "can update an existing invoice" do
+  it "can update an existing invoice" do
     id = create(:invoice).id
-    previous_name = Invoice.last.name
-    invoice_params = { name: "Sledge" }
+    new_customer = create(:customer)
+    previous_name = Invoice.last.customer
+    invoice_params = { customer_id: new_customer.id }
 
     put "/api/v1/invoices/#{id}", params: {invoice: invoice_params}
     invoice = Invoice.find_by(id: id)
 
     expect(response).to be_success
-    expect(invoice.name).to_not eq(previous_name)
-    expect(invoice.name).to eq("Sledge")
+    expect(invoice.customer).to_not eq(previous_name)
+    expect(invoice.customer.id).to eq(invoice_params[:customer_id])
   end
 
-  xit "can destroy an invoice" do
+  it "can destroy an invoice" do
     invoice = create(:invoice)
 
     expect(Invoice.count).to eq(1)
