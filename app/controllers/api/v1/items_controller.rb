@@ -5,7 +5,8 @@ class Api::V1::ItemsController < ApplicationController
   end
 
   def show
-    render json: Item.find(params[:id])
+    check_show_path
+    render json: @item
   end
 
   private
@@ -33,6 +34,22 @@ class Api::V1::ItemsController < ApplicationController
       0
     else
       Invoice.find(params[:invoice_id]) unless params[:invoice_id].nil?
+    end
+  end
+
+  def check_show_path
+    if request.url == api_v1_invoice_item_my_item_url(validate_inv_items)
+      @item = validate_inv_items.item
+    else
+      @item = Item.find(params[:id])
+    end
+  end
+
+  def validate_inv_items
+    if params[:invoice_item_id].nil?
+      0
+    else
+      InvoiceItem.find(params[:invoice_item_id])
     end
   end
 end
