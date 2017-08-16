@@ -86,7 +86,7 @@ describe "Merchants API" do
     transactions2 = create_list(:transaction, 2, invoice: invoice2, result: "success")
     transactions3 = create_list(:transaction, 2, invoice: invoice2, result: "failed")
 
-    get "/api/v1/merchants/:id/favorite_customer"
+    get "/api/v1/merchants/#{merchant.id}/favorite_customer"
     customer = JSON.parse(response.body)
 
     expect(response).to be_success

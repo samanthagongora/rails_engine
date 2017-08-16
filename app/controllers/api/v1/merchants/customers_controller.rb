@@ -1,6 +1,7 @@
 class Api::V1::Merchants::CustomersController < ApplicationController
-  def index
+  def show
     merchant = Merchant.find(params[:id])
-    render json: Customer.joins(:invoices).where(invoices: {status: "pending", merchant_id: merchant.id})
+    binding.pry
+    Invoice.joins(:transactions).where(merchant_id: merchant.id, transactions: {result: 'success'}).group(:customer_id).count.order
   end
 end

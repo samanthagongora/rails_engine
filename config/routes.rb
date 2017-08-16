@@ -20,10 +20,11 @@ Rails.application.routes.draw do
       end
 
       namespace :merchants do
-        get '/:id/customers_with_pending_invoices', to: 'customers#index'
+        get '/:id/favorite_customer', to: 'customers#show'
         get '/find', to: 'find#show'
         get '/find_all', to: 'find#index'
         get '/random', to: 'random#show'
+
       end
 
       namespace :customers do
