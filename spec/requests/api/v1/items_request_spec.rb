@@ -84,4 +84,46 @@ describe "Items API" do
     expect(response).to be_success
     expect(items).to include(item['id'])
   end
+
+  it "can view the invoice items associated with it" do
+    item = create(:item)
+    invoice1 = create(:invoice)
+    invoice2 = create(:invoice)
+    3.times do
+      create(:invoice_item, item_id: item.id,
+             invoice_id: [invoice1.id, invoice2.id].sample)
+    end
+
+    get "/api/v1/items/#{item.id}/invoice_items"
+
+    invoice_items = JSON.parse(response.body, symbolize_names: true)
+
+    expect(response).to be_success
+    expect(invoice_items.count).to eq(3)
+    expect(invoice_items.first[:item_id]).to eq(item.id)
+    expect(invoice_items.last[:item_id]).to eq(item.id)
+  end
+
+  it "can view the merchant it belongs to" do
+    m1    = create(:merchant)
+    m2    = create(:merchant)
+    item1 = create(:item, merchant_id: m1.id)
+    item2 = create(:item, merchant_id: m2.id)
+
+    get "/api/v1/items/#{item1.id}/merchant"
+
+    merchant = JSON.parse(response.body, symbolize_names: true)
+
+    expect(response).to be_success
+    expect(merchant[:id]).to eq(m1.id)
+    expect(merchant[:name]).to eq(m1.name)
+
+    get "/api/v1/items/#{item2.id}/merchant"
+
+    merchant = JSON.parse(response.body, symbolize_names: true)
+
+    expect(response).to be_success
+    expect(merchant[:id]).to eq(m2.id)
+    expect(merchant[:name]).to eq(m2.name)
+  end
 end
