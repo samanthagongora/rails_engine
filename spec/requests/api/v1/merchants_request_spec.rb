@@ -1,4 +1,5 @@
 require 'rails_helper'
+require 'date'
 
 describe "Merchants API" do
   it "sends a list of merchants" do
@@ -58,23 +59,23 @@ describe "Merchants API" do
     expect(merchant.count).to eq(1)
     expect([m1.name, m2.name, m3.name]).to include(merchant.first[:name])
   end
-
-  xit "can return all customers with pending invoices" do
-    customers = create_list(:customer, 4)
-    merchant = create(:merchant)
-    invoice1 = create(:invoice, merchant: merchant, customer: customers[0], status: "pending")
-    invoice2 = create(:invoice, merchant: merchant, customer: customers[1], status: "shipped")
-    invoice3 = create(:invoice, merchant: merchant, customer: customers[2], status: "shipped")
-    invoice4 = create(:invoice, merchant: merchant, customer: customers[3], status: "pending")
-
-    get "/api/v1/merchants/#{merchant.id}/customers_with_pending_invoices"
-    returned_customers = JSON.parse(response.body)
-
-    expect(response).to be_success
-    expect(returned_customers.count).to eq(2)
-    expect(returned_customers).to include(customers[0].id)
-    expect(returned_customers).to include(customers[3].id)
-  end
+  #
+  # xit "can return all customers with pending invoices" do
+  #   customers = create_list(:customer, 4)
+  #   merchant = create(:merchant)
+  #   invoice1 = create(:invoice, merchant: merchant, customer: customers[0], status: "pending")
+  #   invoice2 = create(:invoice, merchant: merchant, customer: customers[1], status: "shipped")
+  #   invoice3 = create(:invoice, merchant: merchant, customer: customers[2], status: "shipped")
+  #   invoice4 = create(:invoice, merchant: merchant, customer: customers[3], status: "pending")
+  #
+  #   get "/api/v1/merchants/#{merchant.id}/customers_with_pending_invoices"
+  #   returned_customers = JSON.parse(response.body)
+  #
+  #   expect(response).to be_success
+  #   expect(returned_customers.count).to eq(2)
+  #   expect(returned_customers).to include(customers[0].id)
+  #   expect(returned_customers).to include(customers[3].id)
+  # end
 
   it "can return favorite customer" do
     merchant = create(:merchant)
@@ -87,10 +88,23 @@ describe "Merchants API" do
     transactions3 = create_list(:transaction, 2, invoice: invoice2, result: "failed")
 
     get "/api/v1/merchants/#{merchant.id}/favorite_customer"
-    customer = JSON.parse(response.body)
+    customer = JSON.parse(response.body, symbolize_names: true)
 
     expect(response).to be_success
     expect(customer.count).to eq(1)
-    expect(customer['id']).to eq(customer1.id)
+    expect(customer[0][:id]).to eq(customer1.id)
+  end
+
+  it "can return revenue for a date" do
+    merchant = create(:merchant)
+    invoice = create(:invoice, merchant: merchant, created_at: DateTime.now)
+    invoice_items = create_list(:invoice_item, 4, invoice: invoice, unit_price: 100)
+
+    get "/api/v1/merchants/#{merchant.id}/revenue?date=#{invoice.created_at}"
+    customer = JSON.parse(response.body, symbolize_names: true)
+
+    expect(response).to be_success
+    expect(customer.count).to eq(1)
+    expect(customer[0][:id]).to eq(customer1.id)
   end
 end
