@@ -28,4 +28,24 @@ class Merchant < ApplicationRecord
     .order("sum(invoice_items.unit_price * invoice_items.quantity) DESC")
     .limit(quantity)
   end
+
+  def customers_with_pending_invoices
+    Customer.find_by_sql(
+      "SELECT customers.*
+      FROM customers
+      INNER JOIN invoices ON invoices.customer_id = customers.id
+      INNER JOIN merchants ON merchants.id = invoices.merchant_id
+      INNER JOIN transactions ON transactions.invoice_id = invoices.id
+      WHERE merchants.id = #{self.id} AND transactions.result = 1
+
+      EXCEPT
+
+      SELECT customers.*
+      FROM customers
+      INNER JOIN invoices ON invoices.customer_id = customers.id
+      INNER JOIN merchants ON merchants.id = invoices.merchant_id
+      INNER JOIN transactions ON transactions.invoice_id = invoices.id
+      WHERE merchants.id = #{self.id} AND transactions.result = 0"
+    )
+  end
 end
