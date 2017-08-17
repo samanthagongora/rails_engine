@@ -85,6 +85,24 @@ describe "Items API" do
     expect(items).to include(item['id'])
   end
 
+  it "can return item with most revenue" do
+    item1 = create(:item)
+    item2 = create(:item)
+    item3 = create(:item)
+    invoice = create(:invoice)
+    invoice_items1 = create_list(:invoice_item, 4, item: item1, quantity: 5, unit_price: 1000, invoice: invoice)
+    invoice_items2 = create_list(:invoice_item, 4, item: item2, quantity: 1, unit_price: 200, invoice: invoice)
+    invoice_items3 = create_list(:invoice_item, 4, item: item3, quantity: 6, unit_price: 700, invoice: invoice)
+    transaction = create(:transaction, invoice: invoice)
+
+    get "/api/v1/items/most_revenue?quantity=2"
+    returned_items = JSON.parse(response.body, symbolize_names: true)
+
+    expect(response).to be_success
+    expect(returned_items[0][:id]).to eq(item1.id)
+    expect(returned_items[1][:id]).to eq(item3.id)
+  end
+
   it "can view the invoice items associated with it" do
     item = create(:item)
     invoice1 = create(:invoice)

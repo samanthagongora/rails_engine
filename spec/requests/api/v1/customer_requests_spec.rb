@@ -59,4 +59,29 @@ describe "Customers API" do
     expect(customer.count).to eq(1)
     expect([c1.first_name, c2.first_name, c3.first_name]).to include(customer.first[:first_name])
   end
+
+  it "can return all invoices for customer" do
+    customer = create(:customer)
+    invoices = create_list(:invoice, 5, customer: customer)
+
+    get "/api/v1/customers/#{customer.id}/invoices"
+
+    returned_invoices = JSON.parse(response.body, symbolize_names: true)
+
+    expect(response).to be_success
+    expect(returned_invoices.count).to eq(5)
+  end
+
+  it "can return all transactions for customer" do
+    customer = create(:customer)
+    invoice = create(:invoice, customer: customer)
+    transactions = create_list(:transaction, 4, invoice: invoice)
+
+    get "/api/v1/customers/#{customer.id}/transactions"
+
+    returned_transactions = JSON.parse(response.body, symbolize_names: true)
+
+    expect(response).to be_success
+    expect(returned_transactions.count).to eq(4)
+  end
 end

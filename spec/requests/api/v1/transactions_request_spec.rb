@@ -64,4 +64,16 @@ describe "Transactions API" do
     expect(transaction.count).to eq(1)
     expect([t1.invoice_id, t2.invoice_id, t3.invoice_id]).to include(transaction.first[:invoice_id])
   end
+
+  it "can return all invoices for transaction" do
+    invoice = create(:invoice)
+    transaction = create(:transaction, invoice: invoice)
+
+    get "/api/v1/transactions/#{transaction.id}/invoice"
+
+    returned_invoice = JSON.parse(response.body, symbolize_names: true)
+
+    expect(response).to be_success
+    expect(returned_invoice[:id]).to eq(invoice.id)
+  end
 end

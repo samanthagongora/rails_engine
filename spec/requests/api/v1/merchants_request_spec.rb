@@ -59,23 +59,23 @@ describe "Merchants API" do
     expect(merchant.count).to eq(1)
     expect([m1.name, m2.name, m3.name]).to include(merchant.first[:name])
   end
-  #
-  # xit "can return all customers with pending invoices" do
-  #   customers = create_list(:customer, 4)
-  #   merchant = create(:merchant)
-  #   invoice1 = create(:invoice, merchant: merchant, customer: customers[0], status: "pending")
-  #   invoice2 = create(:invoice, merchant: merchant, customer: customers[1], status: "shipped")
-  #   invoice3 = create(:invoice, merchant: merchant, customer: customers[2], status: "shipped")
-  #   invoice4 = create(:invoice, merchant: merchant, customer: customers[3], status: "pending")
-  #
-  #   get "/api/v1/merchants/#{merchant.id}/customers_with_pending_invoices"
-  #   returned_customers = JSON.parse(response.body)
-  #
-  #   expect(response).to be_success
-  #   expect(returned_customers.count).to eq(2)
-  #   expect(returned_customers).to include(customers[0].id)
-  #   expect(returned_customers).to include(customers[3].id)
-  # end
+
+  xit "can return all customers with pending invoices" do
+    customers = create_list(:customer, 4)
+    merchant = create(:merchant)
+    invoice1 = create(:invoice, merchant: merchant, customer: customers[0], status: "pending")
+    invoice2 = create(:invoice, merchant: merchant, customer: customers[1], status: "shipped")
+    invoice3 = create(:invoice, merchant: merchant, customer: customers[2], status: "shipped")
+    invoice4 = create(:invoice, merchant: merchant, customer: customers[3], status: "pending")
+
+    get "/api/v1/merchants/#{merchant.id}/customers_with_pending_invoices"
+    returned_customers = JSON.parse(response.body)
+
+    expect(response).to be_success
+    expect(returned_customers.count).to eq(2)
+    expect(returned_customers).to include(customers[0].id)
+    expect(returned_customers).to include(customers[3].id)
+  end
 
   it "can return favorite customer" do
     merchant = create(:merchant)
@@ -100,9 +100,33 @@ describe "Merchants API" do
     invoice_items = create_list(:invoice_item, 4, invoice: invoice, unit_price: 10000)
 
     get "/api/v1/merchants/#{merchant.id}/revenue?date=#{invoice.created_at}"
-    revenue = JSON.parse(response.body, symbolize_names: true)
+    returned_revenue = JSON.parse(response.body, symbolize_names: true)
 
     expect(response).to be_success
-    expect(revenue).to eq({revenue: '400.00'})
+    expect(returned_revenue[0][:revenue]).to eq('400.00')
+  end
+
+  it "can return all items for a merchant" do
+    merchant = create(:merchant)
+    items = create_list(:item, 6, merchant: merchant)
+
+    get "/api/v1/merchants/#{merchant.id}/items"
+
+    returned_items = JSON.parse(response.body, symbolize_names: true)
+
+    expect(response).to be_success
+    expect(returned_items.count).to eq(6)
+  end
+
+  it "can return all invoices for a merchant" do
+    merchant = create(:merchant)
+    invoices = create_list(:invoice, 6, merchant: merchant)
+
+    get "/api/v1/merchants/#{merchant.id}/invoices"
+
+    returned_invoices = JSON.parse(response.body, symbolize_names: true)
+
+    expect(response).to be_success
+    expect(returned_invoices.count).to eq(6)
   end
 end
