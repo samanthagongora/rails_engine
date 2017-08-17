@@ -85,4 +85,106 @@ describe "Invoices API" do
     expect(response).to be_success
     expect(invoices).to include(invoice['id'])
   end
+
+  it "can view the transactions associated with it" do
+    inv = create(:invoice)
+    3.times do
+      create(:transaction, invoice_id: inv.id)
+    end
+
+    get "/api/v1/invoices/#{inv.id}/transactions"
+
+    transactions = JSON.parse(response.body, symbolize_names: true)
+
+    expect(response).to be_success
+    expect(transactions.count).to eq(3)
+    expect(transactions.first[:invoice_id]).to eq(inv.id)
+    expect(transactions.last[:invoice_id]).to eq(inv.id)
+  end
+
+  it "can view the invoice items associated with it" do
+    inv = create(:invoice)
+    item1 = create(:item)
+    item2 = create(:item)
+    3.times do
+      create(:invoice_item, invoice_id: inv.id,
+             item_id: [item1.id, item2.id].sample)
+    end
+
+    get "/api/v1/invoices/#{inv.id}/invoice_items"
+
+    invoice_items = JSON.parse(response.body, symbolize_names: true)
+
+    expect(response).to be_success
+    expect(invoice_items.count).to eq(3)
+    expect(invoice_items.first[:invoice_id]).to eq(inv.id)
+    expect(invoice_items.last[:invoice_id]).to eq(inv.id)
+  end
+
+  it "can view the items associated with it" do
+    inv = create(:invoice)
+    item1 = create(:item)
+    item2 = create(:item)
+    item3 = create(:item)
+    create(:invoice_item, invoice_id: inv.id, item_id: item1.id)
+    create(:invoice_item, invoice_id: inv.id, item_id: item2.id)
+    create(:invoice_item, invoice_id: inv.id, item_id: item3.id)
+
+    get "/api/v1/invoices/#{inv.id}/items"
+
+    items = JSON.parse(response.body, symbolize_names: true)
+
+    expect(response).to be_success
+    expect(items.count).to eq(3)
+    expect(items.first[:name]).to eq(item1.name)
+  end
+
+
+  it "can view the customer it belongs to" do
+    cust1 = create(:customer)
+    cust2 = create(:customer)
+
+    inv1 = create(:invoice, customer_id: cust1.id)
+    inv2 = create(:invoice, customer_id: cust2.id)
+
+    get "/api/v1/invoices/#{inv1.id}/customer"
+
+    customer = JSON.parse(response.body, symbolize_names: true)
+
+    expect(response).to be_success
+    expect(customer[:id]).to eq(cust1.id)
+    expect(customer[:first_name]).to eq(cust1.first_name)
+
+    get "/api/v1/invoices/#{inv2.id}/customer"
+
+    customer = JSON.parse(response.body, symbolize_names: true)
+
+    expect(response).to be_success
+    expect(customer[:id]).to eq(cust2.id)
+    expect(customer[:first_name]).to eq(cust2.first_name)
+  end
+
+  it "can view the merchant it belongs to" do
+    merch1 = create(:merchant)
+    merch2 = create(:merchant)
+
+    inv1 = create(:invoice, merchant_id: merch1.id)
+    inv2 = create(:invoice, merchant_id: merch2.id)
+
+    get "/api/v1/invoices/#{inv1.id}/merchant"
+
+    merchant = JSON.parse(response.body, symbolize_names: true)
+
+    expect(response).to be_success
+    expect(merchant[:id]).to eq(merch1.id)
+    expect(merchant[:name]).to eq(merch1.name)
+
+    get "/api/v1/invoices/#{inv2.id}/merchant"
+
+    merchant = JSON.parse(response.body, symbolize_names: true)
+
+    expect(response).to be_success
+    expect(merchant[:id]).to eq(merch2.id)
+    expect(merchant[:name]).to eq(merch2.name)
+  end
 end
