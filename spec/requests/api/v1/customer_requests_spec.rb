@@ -74,7 +74,7 @@ describe "Customers API" do
 
   it "can return all transactions for customer" do
     customer = create(:customer)
-    invoice = create(:invoice, :customer)
+    invoice = create(:invoice, customer: customer)
     transactions = create_list(:transaction, 4, invoice: invoice)
 
     get "/api/v1/customers/#{customer.id}/transactions"
