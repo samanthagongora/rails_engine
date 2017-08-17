@@ -7,9 +7,7 @@ namespace :import do
                  'import:invoices', 'import:transactions',
                  'import:invoice_items']
 
-
   desc "Import merchants from csv file"
-
   task :merchants => [:environment] do
 
     file = "db/csv/merchants.csv"
@@ -43,7 +41,6 @@ namespace :import do
       amount = 2483
       puts "#{amount - index}" + " " +  "Items Remaining!"
       index += 1
-      # binding.pry if (amount - index) < 0
     end
   end
 
@@ -67,7 +64,6 @@ namespace :import do
   end
 
   desc "Import invoices from csv file"
-  index  = 0
   task :invoices => [:environment] do
 
     file = "db/csv/invoices.csv"
