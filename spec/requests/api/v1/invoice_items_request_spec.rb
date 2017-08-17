@@ -84,4 +84,50 @@ describe "Invoice Items API" do
     expect(response).to be_success
     expect(invoice_items).to include(invoice_item['id'])
   end
+
+  it "can view the invoice it belongs to" do
+    inv1 = create(:invoice)
+    inv2 = create(:invoice)
+    inv_item1 = create(:invoice_item, invoice_id: inv1.id)
+    inv_item2 = create(:invoice_item, invoice_id: inv2.id)
+
+    get "/api/v1/invoice_items/#{inv_item1.id}/invoice"
+
+    invoice = JSON.parse(response.body, symbolize_names: true)
+
+    expect(response).to be_success
+    expect(invoice[:id]).to eq(inv1.id)
+    expect(invoice[:status]).to eq(inv1.status)
+
+    get "/api/v1/invoice_items/#{inv_item2.id}/invoice"
+
+    invoice = JSON.parse(response.body, symbolize_names: true)
+
+    expect(response).to be_success
+    expect(invoice[:id]).to eq(inv2.id)
+    expect(invoice[:status]).to eq(inv2.status)
+  end
+
+  it "can view the item it belongs to" do
+    item1 = create(:item)
+    item2 = create(:item)
+    inv_item1 = create(:invoice_item, item_id: item1.id)
+    inv_item2 = create(:invoice_item, item_id: item2.id)
+
+    get "/api/v1/invoice_items/#{inv_item1.id}/item"
+
+    item = JSON.parse(response.body, symbolize_names: true)
+
+    expect(response).to be_success
+    expect(item[:id]).to eq(item1.id)
+    expect(item[:name]).to eq(item1.name)
+
+    get "/api/v1/invoice_items/#{inv_item2.id}/item"
+
+    item = JSON.parse(response.body, symbolize_names: true)
+
+    expect(response).to be_success
+    expect(item[:id]).to eq(item2.id)
+    expect(item[:name]).to eq(item2.name)
+  end
 end
