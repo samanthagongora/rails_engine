@@ -117,4 +117,16 @@ describe "Merchants API" do
     expect(response).to be_success
     expect(returned_items.count).to eq(6)
   end
+
+  it "can return all invoices for a merchant" do
+    merchant = create(:merchant)
+    invoices = create_list(:invoice, 6, merchant: merchant)
+
+    get "/api/v1/merchants/#{merchant.id}/invoices"
+
+    returned_invoices = JSON.parse(response.body, symbolize_names: true)
+
+    expect(response).to be_success
+    expect(returned_invoices.count).to eq(6)
+  end
 end
