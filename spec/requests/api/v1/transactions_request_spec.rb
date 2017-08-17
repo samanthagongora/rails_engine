@@ -69,12 +69,11 @@ describe "Transactions API" do
     invoice = create(:invoice)
     transaction = create(:transaction, invoice: invoice)
 
-    get "/api/v1/transaction/#{transaction.id}/invoice"
+    get "/api/v1/transactions/#{transaction.id}/invoice"
 
-    invoices = JSON.parse(response.body, symbolize_names: true)
+    returned_invoice = JSON.parse(response.body, symbolize_names: true)
 
     expect(response).to be_success
-    expect(invoices.count).to eq(1)
-    expect(invoice['id']).to eq(invoice.id)
+    expect(returned_invoice[:id]).to eq(invoice.id)
   end
 end
