@@ -21,10 +21,11 @@ Rails.application.routes.draw do
 
       namespace :merchants do
         get '/:id/favorite_customer', to: 'customers#show'
+        get '/:id/revenue', to: 'revenue#show'
         get '/find', to: 'find#show'
         get '/find_all', to: 'find#index'
+        get '/most_revenue', to: 'revenue#index'
         get '/random', to: 'random#show'
-        get '/:id/revenue', to: 'revenue#show'
       end
 
       namespace :customers do
