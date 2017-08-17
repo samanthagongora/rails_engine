@@ -94,16 +94,16 @@ describe "Merchants API" do
     expect(customer[:id]).to eq(customer1.id)
   end
 
-  xit "can return revenue for a date" do
+  it "can return revenue for a date" do
     merchant = create(:merchant)
     invoice = create(:invoice, merchant: merchant, created_at: DateTime.now)
     invoice_items = create_list(:invoice_item, 4, invoice: invoice, unit_price: 10000)
 
     get "/api/v1/merchants/#{merchant.id}/revenue?date=#{invoice.created_at}"
-    revenue = JSON.parse(response.body, symbolize_names: true)
+    returned_revenue = JSON.parse(response.body, symbolize_names: true)
 
     expect(response).to be_success
-    expect(revenue).to eq({revenue: '400.00'})
+    expect(returned_revenue[0][:revenue]).to eq('400.00')
   end
 
   it "can return all items for a merchant" do
