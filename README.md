@@ -59,7 +59,7 @@ First, run `rails s`.
 - `localhost:3000/api/v1/invoices/:id/customer` returns the associated customer
 - `localhost:3000/api/v1/invoices/:id/merchant` returns the associated merchant
 
-####Invoice Items
+#### Invoice Items
 
 - `localhost:3000/api/v1/invoice_items/:id/invoice` returns the associated invoice
 - `localhost:3000/api/v1/invoice_items/:id/item` returns the associated item
