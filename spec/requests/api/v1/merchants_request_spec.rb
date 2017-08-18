@@ -60,21 +60,28 @@ describe "Merchants API" do
     expect([m1.name, m2.name, m3.name]).to include(merchant.first[:name])
   end
 
-  xit "can return all customers with pending invoices" do
+  it "can return all customers with pending invoices" do
     customers = create_list(:customer, 4)
     merchant = create(:merchant)
-    invoice1 = create(:invoice, merchant: merchant, customer: customers[0], status: "pending")
-    invoice2 = create(:invoice, merchant: merchant, customer: customers[1], status: "shipped")
-    invoice3 = create(:invoice, merchant: merchant, customer: customers[2], status: "shipped")
-    invoice4 = create(:invoice, merchant: merchant, customer: customers[3], status: "pending")
+    invoice1 = create(:invoice, merchant: merchant, customer: customers[0])
+    invoice2 = create(:invoice, merchant: merchant, customer: customers[1])
+    invoice3 = create(:invoice, merchant: merchant, customer: customers[2])
+    invoice4 = create(:invoice, merchant: merchant, customer: customers[3])
+    transaction1 = create(:transaction, invoice: invoice1, result: 'success')
+    transaction2 = create(:transaction, invoice: invoice1, result: 'failed')
+    transaction3 = create(:transaction, invoice: invoice2, result: 'success')
+    transaction4 = create(:transaction, invoice: invoice2, result: 'failed')
+    transaction5 = create(:transaction, invoice: invoice3, result: 'success')
+    transaction5 = create(:transaction, invoice: invoice4, result: 'failed')
+
 
     get "/api/v1/merchants/#{merchant.id}/customers_with_pending_invoices"
     returned_customers = JSON.parse(response.body)
 
     expect(response).to be_success
-    expect(returned_customers.count).to eq(2)
-    expect(returned_customers).to include(customers[0].id)
-    expect(returned_customers).to include(customers[3].id)
+    expect(returned_customers.count).to eq(1)
+    expect(returned_customers[0]["id"]).to eq(customers[3].id)
+    expect(returned_customers[0]["id"]).to_not eq(customers[1].id)
   end
 
   it "can return favorite customer" do
