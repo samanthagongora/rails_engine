@@ -84,4 +84,25 @@ describe "Customers API" do
     expect(response).to be_success
     expect(returned_transactions.count).to eq(4)
   end
+
+  it "can return its favorite merchant" do
+    customer = create(:customer)
+    merchant1 = create(:merchant)
+    merchant2 = create(:merchant)
+    invoice1 = create(:invoice, customer: customer, merchant: merchant1)
+    invoice1.transactions << create(:transaction)
+    invoice2 = create(:invoice, customer: customer, merchant: merchant1)
+    invoice2.transactions << create(:transaction)
+    invoice3 = create(:invoice, customer: customer, merchant: merchant2)
+    invoice3.transactions << create(:transaction)
+
+    get "/api/v1/customers/#{customer.id}/favorite_merchant"
+
+    merchant = JSON.parse(response.body, symbolize_names: true)
+
+    expect(response).to be_success
+    expect(merchant[:id]).to eq(merchant1.id)
+    expect(merchant[:name]).to eq(merchant1.name)
+    expect(merchant[:id]).to_not eq(merchant2.id)
+  end
 end

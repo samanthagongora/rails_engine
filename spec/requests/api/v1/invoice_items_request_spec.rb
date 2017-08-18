@@ -30,22 +30,20 @@ describe "Invoice Items API" do
 
     get "/api/v1/invoice_items/find?item_id=#{item.id}"
 
-    invoice_item = JSON.parse(response.body)
-
+    invoice_item = JSON.parse(response.body, symbolize_names: true)
     expect(response).to be_success
-    expect(invoice_item['id']).to eq(dummy.id)
+    expect(invoice_item[:id]).to eq(dummy.id)
   end
 
   it "can get one invoice_item by another attribute" do
     invoice = create(:invoice)
-    id = create(:invoice_item, invoice: invoice).id
+    dummy   = create(:invoice_item, invoice: invoice)
 
     get "/api/v1/invoice_items/find?invoice_id=#{invoice.id}"
-
-    invoice_item = JSON.parse(response.body)
+    invoice_item = JSON.parse(response.body, symbolize_names: true)
 
     expect(response).to be_success
-    expect(invoice_item['id']).to eq(id)
+    expect(invoice_item[:id]).to eq(dummy.id)
   end
 
   it "can get all invoice_items by attribute" do
@@ -60,9 +58,9 @@ describe "Invoice Items API" do
   end
 
   it "can get all invoice_items by another attribute" do
-    create_list(:invoice_item, 4, unit_price:0.3421)
+    create_list(:invoice_item, 4, unit_price:"13635")
 
-    get "/api/v1/invoice_items/find_all?unit_price=0.3421"
+    get "/api/v1/invoice_items/find_all?unit_price=136.35"
 
     invoice_items = JSON.parse(response.body)
 
