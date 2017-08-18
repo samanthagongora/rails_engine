@@ -60,9 +60,9 @@ describe "Items API" do
   end
 
   it "can get all items by another attribute" do
-    create_list(:item, 4, unit_price:0.3421)
+    create_list(:item, 4, unit_price:"13635")
 
-    get "/api/v1/items/find_all?unit_price=0.3421"
+    get "/api/v1/items/find_all?unit_price=136.35"
 
     items = JSON.parse(response.body)
 
