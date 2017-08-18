@@ -155,4 +155,68 @@ describe "Merchants API" do
     expect(response).to be_success
     expect(returned_invoices.count).to eq(6)
   end
+
+  it "can return a list of merchants ordered by most items by quantity" do
+    inv1 = create(:invoice, :with_items, :with_transactions)
+    inv2 = create(:invoice, :with_items,  item_count: 2)
+    inv2.transactions << create(:transaction)
+    inv3 = create(:invoice, :with_items,  item_count: 1)
+    inv3.transactions << create(:transaction)
+    merchant1 = create(:merchant, invoices: [inv1])
+    merchant2 = create(:merchant, invoices: [inv2])
+    merchant3 = create(:merchant, invoices: [inv3])
+    qty = 3
+
+    get "/api/v1/merchants/most_items?quantity=#{qty}"
+
+    merchants = JSON.parse(response.body, symbolize_names: true)
+
+    expect(response).to be_success
+    expect(merchants.count).to eq(qty)
+    expect(merchants.first[:name]).to eq(merchant1.name)
+    expect(merchants.last[:name]).to eq(merchant3.name)
+
+    qty = 2
+
+    get "/api/v1/merchants/most_items?quantity=#{qty}"
+
+    merchants = JSON.parse(response.body, symbolize_names: true)
+
+    expect(response).to be_success
+    expect(merchants.count).to eq(qty)
+    expect(merchants.first[:name]).to eq(merchant1.name)
+    expect(merchants.last[:name]).to eq(merchant2.name)
+
+    qty = 1
+
+    get "/api/v1/merchants/most_items?quantity=#{qty}"
+
+    merchants = JSON.parse(response.body, symbolize_names: true)
+
+    expect(response).to be_success
+    expect(merchants.count).to eq(qty)
+    expect(merchants.first[:name]).to eq(merchant1.name)
+    expect(merchants.last[:name]).to eq(merchant1.name)
+  end
+
+  it "can return a list of merchants ordered by most items for all merchant by default" do
+    inv1 = create(:invoice, :with_items, :with_transactions)
+    inv2 = create(:invoice, :with_items,  item_count: 2)
+    inv2.transactions << create(:transaction)
+    inv3 = create(:invoice, :with_items,  item_count: 1)
+    inv3.transactions << create(:transaction)
+    merchant1 = create(:merchant, invoices: [inv1])
+    merchant2 = create(:merchant, invoices: [inv2])
+    merchant3 = create(:merchant, invoices: [inv3])
+    qty = 3
+
+    get "/api/v1/merchants/most_items"
+
+    merchants = JSON.parse(response.body, symbolize_names: true)
+
+    expect(response).to be_success
+    expect(merchants.count).to eq(qty)
+    expect(merchants.first[:name]).to eq(merchant1.name)
+    expect(merchants.last[:name]).to eq(merchant3.name)
+  end
 end
