@@ -103,7 +103,19 @@ describe "Merchants API" do
     returned_revenue = JSON.parse(response.body, symbolize_names: true)
 
     expect(response).to be_success
-    expect(returned_revenue[0][:revenue]).to eq('400.00')
+    expect(returned_revenue[:revenue]).to eq('400.0')
+  end
+
+  it "can return revenue without a date" do
+    merchant = create(:merchant)
+    invoice = create(:invoice, merchant: merchant)
+    invoice.transactions << create(:transaction)
+    invoice_items = create_list(:invoice_item, 4, invoice: invoice, unit_price: 10000)
+
+    get "/api/v1/merchants/#{merchant.id}/revenue"
+    returned_revenue = JSON.parse(response.body, symbolize_names: true)
+    expect(response).to be_success
+    expect(returned_revenue[:revenue]).to eq('400.0')
   end
 
   it "can return all items for a merchant" do
