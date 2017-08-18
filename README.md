@@ -3,9 +3,9 @@
 
 Use Rails and ActiveRecord to build a JSON API which exposes the SalesEngine data schema
 
-##Contributors
-[Sam Gongora](https://github.com/samanthagongora)
-[Will Ratterman](https://github.com/wratterman)
+## Contributors
+  [Sam Gongora](https://github.com/samanthagongora)
+  [Will Ratterman](https://github.com/wratterman)
 
 ## Installing / Getting started
 
@@ -46,12 +46,12 @@ Below are a list of possible API Relationship Endpoints that you may visit.
 
 First, run `rails s`.
 
-####Merchants
+#### Merchants
 
 `localhost:3000/api/v1/merchants/:id/items` returns a collection of items associated with that merchant
 `localhost:3000/api/v1/merchants/:id/invoices` returns a collection of invoices associated with that merchant from their known orders
 
-####Invoices
+#### Invoices
 
 `localhost:3000/api/v1/invoices/:id/transactions` returns a collection of associated transactions
 `localhost:3000/api/v1/invoices/:id/invoice_items` returns a collection of associated invoice items
@@ -64,16 +64,16 @@ First, run `rails s`.
 `localhost:3000/api/v1/invoice_items/:id/invoice` returns the associated invoice
 `localhost:3000/api/v1/invoice_items/:id/item` returns the associated item
 
-####Items
+#### Items
 
 `localhost:3000/api/v1/items/:id/invoice_items` returns a collection of associated invoice items
 `localhost:3000/api/v1/items/:id/merchant` returns the associated merchant
 
-####Transactions
+#### Transactions
 
 `localhost:3000/api/v1/transactions/:id/invoice` returns the associated invoice
 
-####Customers
+#### Customers
 
 `localhost:3000/api/v1/customers/:id/invoices` returns a collection of associated invoices
 `localhost:3000/api/v1/customers/:id/transactions` returns a collection of all invoice_items
@@ -85,26 +85,26 @@ Below are a list of possible API Business Intelligence that you may visit.
 
 First, run `rails s`
 
-####All Merchants
+#### All Merchants
 
 `localhost:3000/api/v1/merchants/most_revenue?quantity=x` returns the top `x` merchants ranked by total revenue
 `localhost:3000/api/v1/merchants/most_items?quantity=x` returns the top `x` merchants ranked by total number of items sold
 `localhost:3000/api/v1/merchants/revenue?date=x` returns the total revenue for date `x` across all merchants
 
-####Single Merchant
+#### Single Merchant
 
 `localhost:3000/api/v1/merchants/:id/revenue` returns the total revenue for that merchant across successful transactions
 `localhost:3000/api/v1/merchants/:id/revenue?date=x` returns the total revenue for that merchant for a specific invoice date `x`
 `localhost:3000/api/v1/merchants/:id/favorite_customer` returns the customer who has conducted the most total number of successful transactions.
 `localhost:3000/api/v1/merchants/:id/customers_with_pending_invoices` returns a collection of customers which have pending (unpaid) invoices. A pending invoice has no transactions with a result of success.
 
-####Items
+#### Items
 
 `localhost:3000/api/v1/items/most_revenue?quantity=x` returns the top `x` items ranked by total revenue generated
 `localhost:3000/api/v1/items/most_items?quantity=x` returns the top `x` item instances ranked by total number sold
 `localhost:3000/api/v1/items/:id/best_day` returns the date with the most sales for the given item using the invoice date. If there are multiple days with equal number of sales, return the most recent day.
 
-####Customers
+#### Customers
 
 `localhost:3000/api/v1/customers/:id/favorite_merchant` returns a merchant where the customer has conducted the most successful transactions
 
