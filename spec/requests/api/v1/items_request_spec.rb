@@ -60,9 +60,9 @@ describe "Items API" do
   end
 
   it "can get all items by another attribute" do
-    create_list(:item, 4, unit_price:0.3421)
+    create_list(:item, 4, unit_price:"13635")
 
-    get "/api/v1/items/find_all?unit_price=0.3421"
+    get "/api/v1/items/find_all?unit_price=136.35"
 
     items = JSON.parse(response.body)
 
@@ -143,5 +143,94 @@ describe "Items API" do
     expect(response).to be_success
     expect(merchant[:id]).to eq(m2.id)
     expect(merchant[:name]).to eq(m2.name)
+  end
+
+  it "can return a list of items ordered by most items by quantity" do
+    item1 = create(:item)
+    3.times do
+      item1.invoice_items << create(:invoice_item)
+      item1.invoice_items.last.invoice = create(:invoice)
+      item1.invoice_items.last.invoice.transactions << create(:transaction)
+    end
+
+    item2 = create(:item)
+    2.times do
+      item2.invoice_items << create(:invoice_item)
+      item2.invoice_items.last.invoice = create(:invoice, :with_transactions)
+      item2.invoice_items.last.invoice.transactions << create(:transaction)
+    end
+
+    item3 = create(:item)
+    1.times do
+      item3.invoice_items << create(:invoice_item)
+      item3.invoice_items.last.invoice = create(:invoice, :with_transactions)
+      item3.invoice_items.last.invoice.transactions << create(:transaction)
+    end
+    qty = 3
+
+    get "/api/v1/items/most_items?quantity=#{qty}"
+
+    items = JSON.parse(response.body, symbolize_names: true)
+
+    expect(response).to be_success
+    expect(items.count).to eq(qty)
+    expect(items.first[:name]).to eq(item1.name)
+    expect(items.last[:name]).to eq(item3.name)
+
+    qty = 2
+
+    get "/api/v1/items/most_items?quantity=#{qty}"
+
+    items = JSON.parse(response.body, symbolize_names: true)
+
+    expect(response).to be_success
+    expect(items.count).to eq(qty)
+    expect(items.first[:name]).to eq(item1.name)
+    expect(items.last[:name]).to eq(item2.name)
+
+    qty = 1
+
+    get "/api/v1/items/most_items?quantity=#{qty}"
+
+    items = JSON.parse(response.body, symbolize_names: true)
+
+    expect(response).to be_success
+    expect(items.count).to eq(qty)
+    expect(items.first[:name]).to eq(item1.name)
+    expect(items.last[:name]).to eq(item1.name)
+  end
+
+  it "can return a list of items ordered by most items for all item by default" do
+    item1 = create(:item)
+    3.times do
+      item1.invoice_items << create(:invoice_item)
+      item1.invoice_items.last.invoice = create(:invoice)
+      item1.invoice_items.last.invoice.transactions << create(:transaction)
+    end
+
+    item2 = create(:item)
+    2.times do
+      item2.invoice_items << create(:invoice_item)
+      item2.invoice_items.last.invoice = create(:invoice, :with_transactions)
+      item2.invoice_items.last.invoice.transactions << create(:transaction)
+    end
+
+    item3 = create(:item)
+    1.times do
+      item3.invoice_items << create(:invoice_item)
+      item3.invoice_items.last.invoice = create(:invoice, :with_transactions)
+      item3.invoice_items.last.invoice.transactions << create(:transaction)
+    end
+
+    qty = 3
+
+    get "/api/v1/items/most_items"
+
+    items = JSON.parse(response.body, symbolize_names: true)
+
+    expect(response).to be_success
+    expect(items.count).to eq(qty)
+    expect(items.first[:name]).to eq(item1.name)
+    expect(items.last[:name]).to eq(item3.name)
   end
 end
