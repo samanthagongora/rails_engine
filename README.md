@@ -114,6 +114,7 @@ The Spec Harness for this project can be found [Here](https://github.com/turings
 
 To run the spec harness, run the following
 
+in terminal `../rails_engine`
 ```
 cd ..
 git clone https://github.com/turingschool/rales_engine_spec_harness.git
@@ -121,12 +122,12 @@ cd rales_engine_spec_harness
 bundle
 ```
 
-in `../rails_engine`
+in terminal `../rails_engine`
 ```
 rails s
 ```
 
-in `../rales_engine_spec_harness_engine`
+in terminal `../rales_engine_spec_harness_engine`
 ```
 rake
 => #runs the spec harness
